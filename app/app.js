@@ -20,8 +20,13 @@ app.use((err, request, response, next) =>{
     });
 
 
-app.listen(9090, () => {
-    console.log('listening on 9090')
-})
+    let server;
+    beforeAll(() => {
+      server = app.listen(9090);
+    });
+    
+    afterAll((done) => {
+      server.close(done);
+    });
 
 module.exports = app
