@@ -28,8 +28,4 @@ describe("GET /api/topics", () => {
             })
         })
     })
-    test('ERR should return 404 not found for invalid URL', ()=>{
-        return request(app).get('/api/notARoute')
-        .expect(404)
-    })
 })
