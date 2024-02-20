@@ -6,6 +6,6 @@ exports.fetchArticleById = (id) => {
         if(response.rowCount === 0){
             return Promise.reject({status:404, msg:'id not found'})
         }
-        return response.rows
+        return response.rows[0]
     })
 }

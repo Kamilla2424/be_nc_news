@@ -35,8 +35,7 @@ describe("GET /api/articles/:article_id", () => {
         return request(app).get('/api/articles/2')
         .expect(200)
         .then(({body}) => {
-            const articles = body.article
-            articles.forEach((article) => {
+            const article = body.article
                 expect(article).toMatchObject({
                     article_id: expect.any(Number),
                     article_img_url: expect.any(String),
@@ -46,7 +45,6 @@ describe("GET /api/articles/:article_id", () => {
                     title: expect.any(String),
                     topic: expect.any(String),
                     votes: expect.any(Number),
-                })
             })
         })
     })
