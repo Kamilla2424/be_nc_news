@@ -9,3 +9,10 @@ exports.fetchArticleById = (id) => {
         return response.rows
     })
 }
+
+exports.fetchArticlesArr = () => {
+    return db.query(`SELECT * FROM articles ORDER BY created_at DESC`)
+    .then((response) => {
+        return response.rows
+    })
+}
