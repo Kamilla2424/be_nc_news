@@ -1,8 +1,8 @@
 const {fetchTopics} = require('../models/topics-model')
 
 exports.getTopics = (req, res, next) => {
-    fetchTopics().then(({rows}) => {
-        res.status(200).send(rows)
+    fetchTopics().then((topics) => {
+        res.status(200).send(topics)
     })
     .catch((err) => {
         next(err)
