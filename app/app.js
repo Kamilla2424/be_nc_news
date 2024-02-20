@@ -19,14 +19,4 @@ app.use((err, request, response, next) =>{
       }
     });
 
-
-    let server;
-    beforeAll(() => {
-      server = app.listen(9090);
-    });
-    
-    afterAll((done) => {
-      server.close(done);
-    });
-
 module.exports = app
