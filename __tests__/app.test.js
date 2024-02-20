@@ -4,6 +4,7 @@ const express = require('express')
 const db = require('../db/connection.js')
 const seed = require('../db/seeds/seed.js')
 const data = require('../db/data/test-data')
+const endpoints = require('/Users/kamillamohamed/Northcoders/backend/be-nc-news/endpoints.json');
 
 app.use(express.json())
 
@@ -27,5 +28,15 @@ describe("GET /api/topics", () => {
                 })
             })
         })
+    })
+})
+
+describe("GET /api", () => {
+    test('returns the endpoint with its information', () => {
+        return request(app).get('/api')
+        .expect(200)
+        .then(({body}) => {
+            expect(body.endpoints).toEqual(endpoints)
+        })          
     })
 })
