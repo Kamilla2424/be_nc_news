@@ -15,6 +15,23 @@
     "exampleResponse": {
       "articles": [
         {
+          "author": "jessjelly",
+          "title": "Running a Node App",
+          "article_id": 1,
+          "topic": "coding",
+          "created_at": "2020-11-07T06:03:00.000Z",
+          "votes": 0,
+          "article_img_url": "http://example.com/image.jpg",
+          "comment_count": 5
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "GET /api/topics": {
+      "description": "serves an article with the article_id used",
+      "queries": [],
+      "exampleResponse": {
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
@@ -22,8 +39,7 @@
           "created_at": "2018-05-30T15:59:13.341Z",
           "votes": 0,
           "comment_count": 6
-        }
-      ]
+      }
     }
   }
 }
