@@ -87,3 +87,37 @@ describe("GET /api/articles", () => {
         })
     })
 })
+describe("GET /api/articles/:article_id/comments", () => {
+    test('returns an arr of articles', () => {
+        return request(app).get('/api/articles/1/comments')
+        .expect(200)
+        .then(({body}) => {
+            const comments = body.comments
+            expect(comments).toBeSorted('created_at', {ascending: true})
+            comments.forEach((comment) => {
+                expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: 1
+                })
+            })
+        })
+    })
+    test('ERR - should return 400 when id is not valid', () => {
+        return request(app).get('/api/articles/9999/comments')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('Not Found');
+        })
+    })
+    test('ERR - should return 400 when id is not valid', () => {
+        return request(app).get('/api/articles/notAnId/comments')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+})
