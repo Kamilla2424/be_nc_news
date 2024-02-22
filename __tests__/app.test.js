@@ -171,3 +171,79 @@ describe("POST /api/articles/:article_id/comments", () => {
         })
     })
 })
+describe("PATCH /api/articles/:article_id", () => {
+    test("Should increase the articles votes if positive number", () => {
+        const body = {
+            inc_votes : 1 
+        }
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(200)
+        .then(({body}) => {
+            const article = body.article
+            expect(article).toMatchObject({
+                    article_id: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    votes: 101
+            })
+        })
+    })
+    test("Should decrese the articles votes if negative number", () => {
+        const body = {
+            inc_votes : -50
+        }
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(200)
+        .then(({body}) => {
+            const article = body.article
+            expect(article).toMatchObject({
+                    article_id: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    votes: 50
+            })
+        })
+    })
+    test("ERR - should return 400 when body is empty", () => {
+        const body = {}
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad Request")
+        })
+    })
+    test("ERR - should return 400 when body is in wrong form or wrong info", () => {
+        const body = { inc_votes: 'whatever' }
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad Request")
+        })
+    })
+    test('ERR - should return 400 when id is not valid', () => {
+        return request(app).get('/api/articles/9999')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('Not Found');
+        })
+    })
+    test('ERR - should return 400 when id is not valid', () => {
+        return request(app).get('/api/articles/notAnId')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+})

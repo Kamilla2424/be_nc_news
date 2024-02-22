@@ -1,6 +1,6 @@
 const express = require('express')
 const { getTopics } = require('./controllers/topics-controller')
-const { getArticleById, getArticles } = require('./controllers/article-controller')
+const { getArticleById, getArticles, addVotesById } = require('./controllers/article-controller')
 const { getCommentsById, postCommentsById } = require('./controllers/comments-controller')
 const app = express()
 app.use(express.json())
@@ -17,9 +17,13 @@ app.get('/api/articles/:article_id/comments', getCommentsById)
 
 app.post('/api/articles/:article_id/comments', postCommentsById)
 
+app.patch('/api/articles/:article_id', addVotesById)
+
 app.use((err, req, res, next) =>{
     if(err.status === 404) {
         res.status(404).send({ msg: "Not Found" });
+    }else if(err.status === 400){
+        res.status(400).send({msg: 'Bad Request'})
     }
     next(err)
 });

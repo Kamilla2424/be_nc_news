@@ -16,3 +16,17 @@ exports.fetchArticlesArr = () => {
         return response.rows
     })
 }
+
+exports.addVotes = (id, num) => {
+    return db.query(`SELECT * FROM articles WHERE article_id = ${id}`)
+    .then((result) => {
+        if(result.rowCount === 0){
+            return Promise.reject({status:404, msg:'id not found'})
+        }else if(typeof num !== 'number'){
+            return Promise.reject({status: 400, msg: 'Missing Required Fields'})
+        }
+        const article = result.rows[0]
+        article.votes += num
+        return article
+    })
+}
