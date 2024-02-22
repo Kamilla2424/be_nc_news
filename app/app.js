@@ -1,6 +1,7 @@
 const express = require('express')
 const { getTopics } = require('./controllers/topics-controller')
 const { getArticleById, getArticles } = require('./controllers/article-controller')
+const { getCommentsById } = require('./controllers/comments-controller')
 const { getEndpoint } = require('./controllers/app-controller')
 const app = express()
 
@@ -11,6 +12,8 @@ app.get('/api', getEndpoint)
 app.get('/api/articles/:article_id', getArticleById)
 
 app.get('/api/articles', getArticles)
+
+app.get('/api/articles/:article_id/comments', getCommentsById)
 
 app.use((err, req, res, next) =>{
     if(err.status === 404) {
