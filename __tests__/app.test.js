@@ -106,7 +106,14 @@ describe("GET /api/articles/:article_id/comments", () => {
             })
         })
     })
-    test('ERR - should return 400 when id is not valid', () => {
+    test('Should return an empty array when the id is valid but comments are empty', () => {
+        return request(app).get('/api/articles/2/comments')
+        .expect(200)
+        .then((response) => {
+            expect(response.body.comments).toEqual([])
+        })
+    })
+    test('ERR - should return 404 when id is a number but not valid', () => {
         return request(app).get('/api/articles/9999/comments')
         .expect(404)
         .then((response) => {
