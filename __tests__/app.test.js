@@ -156,7 +156,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             expect(response.body.msg).toBe("Missing Required Fields")
         })
     })
-    test('ERR - should return 400 when id is not valid', () => {
+    test('ERR - should return 404 when id is valid but doesnt exist', () => {
         return request(app).get('/api/articles/9999/comments')
         .expect(404)
         .then((response) => {
@@ -165,6 +165,13 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
     test('ERR - should return 400 when id is not valid', () => {
         return request(app).get('/api/articles/notAnId/comments')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+    test('ERR - should return 404 when id is valid but doesnt exist', () => {
+        return request(app).get('/api/articles/2/comments')
         .expect(400)
         .then((response) => {
             expect(response.body.msg).toBe('Bad Request');
