@@ -1,7 +1,7 @@
 const express = require('express')
 const { getTopics } = require('./controllers/topics-controller')
 const { getArticleById, getArticles, addVotesById } = require('./controllers/article-controller')
-const { getCommentsById, postCommentsById } = require('./controllers/comments-controller')
+const { getCommentsById, postCommentsById, deleteCommentById } = require('./controllers/comments-controller')
 const app = express()
 app.use(express.json())
 
@@ -19,6 +19,8 @@ app.post('/api/articles/:article_id/comments', postCommentsById)
 
 app.patch('/api/articles/:article_id', addVotesById)
 
+app.delete('/api/comments/:comment_id', deleteCommentById)
+
 app.use((err, req, res, next) =>{
     if(err.status === 404) {
         res.status(404).send({ msg: "Not Found" });
@@ -29,6 +31,7 @@ app.use((err, req, res, next) =>{
 });
     
 app.use((err, req, res, next) => {
+    console.log(err)
     if (err.code === '42703') {
         res.status(400).send({ msg: 'Bad Request' });
     }else if(err.code === '23502'){

@@ -247,3 +247,23 @@ describe("PATCH /api/articles/:article_id", () => {
         })
     })
 })
+describe("DELETE /api/comments/:comment_id", () => {
+    test("responds with 204 when successful", () => {
+        return request(app).delete('/api/comments/3')
+        .expect(204);
+    })
+    test("ERR - should return 404 when id is not valid", () => {
+        return request(app).delete('/api/comments/9999')
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe('Not Found');
+        });
+    })
+    test("ERR - should return 400 when id is not valid", () => {
+        return request(app).delete('/api/comments/notAnId')
+        .expect(400)
+        .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      })
+    })
+})
