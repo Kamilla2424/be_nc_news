@@ -10,10 +10,18 @@ exports.fetchArticleById = (id) => {
     })
 }
 
-exports.fetchArticlesArr = () => {
+exports.fetchArticlesArr = (query) => {
     return db.query(`SELECT * FROM articles ORDER BY created_at DESC`)
     .then((response) => {
         return response.rows
+    })
+    .then((arr) => {
+        if(query){
+            return filteredArr = arr.filter((article) => {
+                return article.topic === query
+            })
+        }
+        return arr
     })
 }
 
