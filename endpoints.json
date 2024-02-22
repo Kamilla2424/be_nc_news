@@ -58,5 +58,26 @@
         ]
       
     }
+  },
+    "POST /api/articles/:article_id/comments": {
+      "description": "adds a comment to an article specified by article_id",
+      "requestBody": {
+        "username": "lurker",
+        "body": "so cool beans!"
+      },
+      "exampleResponse": {
+        "201": {
+            "comment": {
+              "comment_id": 19,
+              "author": "lurker",
+              "article_id": 1,
+              "votes": 0,
+              "created_at": "2021-01-18T10:00:20.514Z",
+              "body": "so cool beans!"
+            
+          }
+        }
+      }
+    
   }
 }

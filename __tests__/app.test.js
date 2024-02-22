@@ -136,3 +136,60 @@ describe("GET /api/articles/:article_id/comments", () => {
         })
     })
 })
+
+describe("POST /api/articles/:article_id/comments", () => {
+    test("Should return a comment with username as author and body as body to the right article", () => {
+        const body = {
+            username: 'lurker',
+            body: 'so cool beans!'
+        }
+        return request(app).post('/api/articles/1/comments')
+        .send(body)
+        .expect(200)
+        .then((response) => {
+            const {comment} = response.body
+            expect(comment.author).toBe('lurker')
+            expect(comment.article_id).toBe(1)
+            expect(comment.body).toBe('so cool beans!')
+        }) 
+    })
+    test("ERR - should return 400 when body is empty", () => {
+        const body = {}
+        return request(app).post('/api/articles/1/comments')
+        .send(body)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Missing Required Fields")
+        })
+    })
+    test("ERR - should return 400 when body is in wrong form or wrong info", () => {
+        const body = { rating_out_of_five: 6 }
+        return request(app).post('/api/articles/1/comments')
+        .send(body)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Missing Required Fields")
+        })
+    })
+    test('ERR - should return 404 when id is valid but doesnt exist', () => {
+        return request(app).get('/api/articles/9999/comments')
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('Not Found');
+        })
+    })
+    test('ERR - should return 400 when id is not valid', () => {
+        return request(app).get('/api/articles/notAnId/comments')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+    test('ERR - should return 404 when id is valid but doesnt exist', () => {
+        return request(app).get('/api/articles/2/comments')
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+})
