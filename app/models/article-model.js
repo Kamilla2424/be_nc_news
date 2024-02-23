@@ -6,7 +6,7 @@ exports.fetchArticleById = (id) => {
         if(response.rowCount === 0){
             return Promise.reject({status:404, msg:'id not found'})
         }
-        return response.rows
+        return response.rows[0]
     })
 }
 
@@ -18,7 +18,7 @@ exports.fetchArticlesArr = (query) => {
     }
 
     text += ` ORDER BY created_at DESC;`
-    console.log(text)
+    
     return db.query(text)
     .then((response) => {
         return response.rows
@@ -26,15 +26,14 @@ exports.fetchArticlesArr = (query) => {
 }
 
 exports.addVotes = (id, num) => {
-    return db.query(`SELECT * FROM articles WHERE article_id = ${id}`)
+    if(typeof num !== 'number'){
+        return Promise.reject({status: 400, msg: 'Missing Required Fields'})
+    }
+    return db.query(`UPDATE articles 
+    SET votes = votes + ${num} 
+    WHERE article_id = ${id}
+    RETURNING *`)
     .then((result) => {
-        if(result.rowCount === 0){
-            return Promise.reject({status:404, msg:'id not found'})
-        }else if(typeof num !== 'number'){
-            return Promise.reject({status: 400, msg: 'Missing Required Fields'})
-        }
-        const article = result.rows[0]
-        article.votes += num
-        return article
+        return result.rows[0]
     })
 }

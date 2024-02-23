@@ -1,8 +1,8 @@
 const { fetchArticleById, fetchArticlesArr, addVotes } = require("../models/article-model")
 
 exports.getArticleById = (req, res, next) => {
-    const id = req.params.article_id
-    fetchArticleById(id).then((article) => {
+    const {article_id} = req.params
+    fetchArticleById(article_id).then((article) => {
         res.status(200).send({article: article})
     })
     .catch((err) => {
@@ -21,8 +21,11 @@ exports.getArticles = (req, res, next) => {
 }
 
 exports.addVotesById = (req, res, next) => {
-    const {inc_votes} = req.body
     const {article_id} = req.params
+    let inc_votes = req.body.inc_votes
+    if(Object.keys(req.body).length === 0){
+        inc_votes = 0
+    }
     addVotes(article_id, inc_votes).then((article) => {
         res.status(200).send({article: article})
     })
