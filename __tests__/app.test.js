@@ -94,6 +94,33 @@ describe("GET /api/articles", () => {
             })
         })
     })
+    test("returns arr of articles filtered by topic", () => {
+        return request(app).get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({body}) => {
+            const articles = body.articles
+            articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    title: expect.any(String),
+                    topic: "mitch",
+                    votes: expect.any(Number),
+                })
+            })
+        })
+    })
+    test("should return empty array when topic query doesn't match any articles", () => {
+        return request(app).get('/api/articles?topic=notATopic')
+        .expect(200)
+        .then(({body}) => {
+            const articles = body.articles
+            expect(articles).toEqual([])
+        })
+    })
 })
 describe("GET /api/articles/:article_id/comments", () => {
     test('returns an arr of articles', () => {
