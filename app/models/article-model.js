@@ -30,7 +30,6 @@ exports.addVotes = (id, num) => {
     WHERE article_id = ${id}
     RETURNING *`)
     .then((result) => {
-        console.log(result.rows[0])
         return result.rows[0]
     })
 }
