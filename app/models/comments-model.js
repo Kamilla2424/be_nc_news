@@ -22,7 +22,7 @@ exports.insertCommentById = (id, username, body) => {
         if(response.rowCount === 0){
             return Promise.reject({status:404, msg:'id not found'})
         }else if(username === 'undefined' || body === 'undefined' || username === 'undefined' && body === 'undefined'){
-            Promise.reject({status: 400, msg: 'missing require fields'})
+            return Promise.reject({status: 400, msg: 'missing require fields'})
         }else{
             return db.query(`INSERT INTO comments (body, author, article_id) VALUES ($1, $2, $3) RETURNING comment_id, author, article_id, votes, created_at, body;`,
             [body, username, id])
