@@ -11,17 +11,17 @@ exports.fetchArticleById = (id) => {
 }
 
 exports.fetchArticlesArr = (query) => {
-    return db.query(`SELECT * FROM articles ORDER BY created_at DESC`)
+    let text = `SELECT * FROM articles`
+    
+    if(query){
+        text += ` WHERE topic = '${query}'`
+    }
+
+    text += ` ORDER BY created_at DESC;`
+    console.log(text)
+    return db.query(text)
     .then((response) => {
         return response.rows
-    })
-    .then((arr) => {
-        if(query){
-            return filteredArr = arr.filter((article) => {
-                return article.topic === query
-            })
-        }
-        return arr
     })
 }
 

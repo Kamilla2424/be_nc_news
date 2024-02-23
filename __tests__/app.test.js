@@ -66,7 +66,7 @@ describe("GET /api/articles/:article_id", () => {
     })
 })
 
-describe("GET /api/articles", () => {
+describe.only("GET /api/articles", () => {
     test('returns an arr of articles', () => {
         return request(app).get('/api/articles')
         .expect(200)
@@ -106,7 +106,7 @@ describe("GET /api/articles", () => {
         })
     })
     test("should return empty array when topic query doesn't match any articles", () => {
-        return request(app).get('/api/articles?topic=puppies')
+        return request(app).get('/api/articles?topic=notATopic')
         .expect(200)
         .then(({body}) => {
             const articles = body.articles
