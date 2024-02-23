@@ -214,13 +214,23 @@ describe("PATCH /api/articles/:article_id", () => {
             })
         })
     })
-    test("ERR - should return 400 when body is empty", () => {
+    test("should return article unchanged if body is empty", () => {
         const body = {}
         return request(app).patch('/api/articles/1')
         .send(body)
-        .expect(400)
-        .then((response) => {
-            expect(response.body.msg).toBe("Bad Request")
+        .expect(200)
+        .then(({body}) => {
+            const article = body.article
+            expect(article).toMatchObject({
+                    article_id: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    votes: 100
+            })
         })
     })
     test("ERR - should return 400 when body is in wrong form or wrong info", () => {
