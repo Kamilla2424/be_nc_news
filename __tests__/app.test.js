@@ -232,15 +232,19 @@ describe("PATCH /api/articles/:article_id", () => {
             expect(response.body.msg).toBe("Bad Request")
         })
     })
-    test('ERR - should return 400 when id is not valid', () => {
+    test('ERR - should return 404 when id is not valid', () => {
+        const body = {inc_votes: 5}
         return request(app).get('/api/articles/9999')
+        .send(body)
         .expect(404)
         .then((response) => {
             expect(response.body.msg).toBe('Not Found');
         })
     })
     test('ERR - should return 400 when id is not valid', () => {
+        const body = {inc_votes: 5}
         return request(app).get('/api/articles/notAnId')
+        .send(body)
         .expect(400)
         .then((response) => {
             expect(response.body.msg).toBe('Bad Request');
