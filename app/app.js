@@ -1,7 +1,7 @@
 const express = require('express')
 const { getTopics } = require('./controllers/topics-controller')
 const { getArticleById, getArticles, addVotesById } = require('./controllers/article-controller')
-const { getCommentsById, postCommentsById } = require('./controllers/comments-controller')
+const { getCommentsById, postCommentsById, deleteCommentById } = require('./controllers/comments-controller')
 const { getEndpoint } = require('./controllers/app-controller')
 
 const app = express()
@@ -20,6 +20,8 @@ app.get('/api/articles/:article_id/comments', getCommentsById)
 app.post('/api/articles/:article_id/comments', postCommentsById)
 
 app.patch('/api/articles/:article_id', addVotesById)
+
+app.delete('/api/comments/:comment_id', deleteCommentById)
 
 app.use((err, req, res, next) =>{
     if(err.status === 404) {
