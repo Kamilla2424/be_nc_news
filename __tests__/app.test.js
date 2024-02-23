@@ -96,6 +96,33 @@ describe("GET /api/articles", () => {
             })
         })
     })
+    test("returns arr of articles filtered by topic", () => {
+        return request(app).get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({body}) => {
+            const articles = body.articles
+            articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    title: expect.any(String),
+                    topic: "mitch",
+                    votes: expect.any(Number),
+                })
+            })
+        })
+    })
+    test("should return empty array when topic query doesn't match any articles", () => {
+        return request(app).get('/api/articles?topic=notATopic')
+        .expect(200)
+        .then(({body}) => {
+            const articles = body.articles
+            expect(articles).toEqual([])
+        })
+    })
 })
 describe("GET /api/articles/:article_id/comments", () => {
     test('returns an arr of articles', () => {
@@ -185,6 +212,133 @@ describe("POST /api/articles/:article_id/comments", () => {
         .expect(400)
         .then((response) => {
             expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+})
+describe("PATCH /api/articles/:article_id", () => {
+    test("Should increase the articles votes if positive number", () => {
+        const body = {
+            inc_votes : 1 
+        }
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(200)
+        .then(({body}) => {
+            const article = body.article
+            expect(article).toMatchObject({
+                    article_id: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    votes: 101
+            })
+        })
+    })
+    test("Should decrese the articles votes if negative number", () => {
+        const body = {
+            inc_votes : -50
+        }
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(200)
+        .then(({body}) => {
+            const article = body.article
+            expect(article).toMatchObject({
+                    article_id: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    votes: 50
+            })
+        })
+    })
+    test("should return article unchanged if body is empty", () => {
+        const body = {}
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(200)
+        .then(({body}) => {
+            const article = body.article
+            expect(article).toMatchObject({
+                    article_id: 1,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    votes: 100
+            })
+        })
+    })
+    test("ERR - should return 400 when body is in wrong form or wrong info", () => {
+        const body = { inc_votes: 'whatever' }
+        return request(app).patch('/api/articles/1')
+        .send(body)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe("Bad Request")
+        })
+    })
+    test('ERR - should return 404 when id is not valid', () => {
+        const body = {inc_votes: 5}
+        return request(app).get('/api/articles/9999')
+        .send(body)
+        .expect(404)
+        .then((response) => {
+            expect(response.body.msg).toBe('Not Found');
+        })
+    })
+    test('ERR - should return 400 when id is not valid', () => {
+        const body = {inc_votes: 5}
+        return request(app).get('/api/articles/notAnId')
+        .send(body)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad Request');
+        })
+    })
+})
+describe("DELETE /api/comments/:comment_id", () => {
+    test("responds with 204 when successful", () => {
+        return request(app).delete('/api/comments/3')
+        .expect(204);
+    })
+    test("ERR - should return 404 when id is not valid", () => {
+        return request(app).delete('/api/comments/9999')
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe('Not Found');
+        });
+    })
+    test("ERR - should return 400 when id is not valid", () => {
+        return request(app).delete('/api/comments/notAnId')
+        .expect(400)
+        .then((response) => {
+        expect(response.body.msg).toBe('Bad Request');
+      })
+    })
+})
+describe("GET /api/users", () => {
+    test("returns an array of users with the right properties", () => {
+        return request(app).get('/api/users')
+        .expect(200)
+        .then(({body}) => {
+            const users = body.users
+            expect(users.length).toBe(4)
+            users.forEach((user) => {
+                expect(user).toMatchObject({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                })
+            })
         })
     })
 })

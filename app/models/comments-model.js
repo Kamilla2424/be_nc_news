@@ -1,4 +1,5 @@
 const db = require('../../db/connection')
+const { response } = require('../app')
 
 exports.fetchCommentsById = (id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = ${id}`)
@@ -30,5 +31,14 @@ exports.insertCommentById = (id, username, body) => {
     })
     .then((result) => {
         return result.rows[0]
+    })
+}
+
+exports.removeComment = (id) => {
+    return db.query(`DELETE FROM comments WHERE comment_id = ${id}`)
+    .then((response) => {
+        if(response.rowCount === 0){
+            return Promise.reject({ status: 404, msg: 'team does not exist' })
+        }
     })
 }
