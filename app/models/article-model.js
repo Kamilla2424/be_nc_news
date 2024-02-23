@@ -20,3 +20,17 @@ exports.fetchArticlesArr = () => {
         return response.rows
     })
 }
+
+exports.addVotes = (id, num) => {
+    if(typeof num !== 'number'){
+        return Promise.reject({status: 400, msg: 'Missing Required Fields'})
+    }
+    return db.query(`UPDATE articles 
+    SET votes = votes + ${num} 
+    WHERE article_id = ${id}
+    RETURNING *`)
+    .then((result) => {
+        console.log(result.rows[0])
+        return result.rows[0]
+    })
+}
